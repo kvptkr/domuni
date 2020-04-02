@@ -11,9 +11,11 @@ conn = pymysql.connect(host, user = user, port = port, passwd = password, db=dbn
 
 # response = pd.read_sql("",con=conn)
 
-# response = pd.read_sql(sql,con=conn)
+sql = "SELECT * from listing"
+
+response = pd.read_sql(sql,con=conn)
 
 # Query to see all tables
-response = pd.read_sql("SELECT table_name, table_schema FROM information_schema.tables WHERE table_schema = 'domuni_db'",con=conn)
+# response = pd.read_sql("SELECT table_name, table_schema FROM information_schema.tables WHERE table_schema = 'domuni_db'",con=conn)
 
 print(response)
