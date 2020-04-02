@@ -43,35 +43,37 @@ class Listing(db.Model):
     city = db.Column(db.String(100))
     postal_code = db.Column(db.String(7))
     listing_type = db.Column(db.String(100))
-    num_rooms = db.Column(db.Integer)
+    num_rooms_available = db.Column(db.Integer)
+    num_rooms_total = db.Column(db.Integer)
     ensuite = db.Column(db.Boolean)
     dist_to_wlu = db.Column(db.Integer)
     dist_to_wloo = db.Column(db.Integer)
-    is_coed = db.Column(db.Boolean)
+    coed = db.Column(db.String(100))
     price = db.Column(db.Integer)
     lessor_id = db.Column(db.Integer, db.ForeignKey('lessor.lessor_id'),nullable=False)
     favourite_listings = db.relationship('Favourite_listing', backref='listing',lazy=True)
     photos = db.relationship('Photo', backref='listing',lazy=True)
 
 
-    def __init__(self,street,city,postal_code,listing_type,lessor_id, num_rooms,ensuite,dist_to_wlu, dist_to_wloo,is_coed,price):
+    def __init__(self,street,city,postal_code,listing_type,lessor_id, num_rooms_available,ensuite,dist_to_wlu, dist_to_wloo,coed,price,num_rooms_total):
         self.street = street
         self.city = city
         self.postal_code = postal_code
         self.listing_type = listing_type
         self.lessor_id = lessor_id
-        self.num_rooms = num_rooms
+        self.num_rooms_available = num_rooms_available
         self.ensuite = ensuite
         self.dist_to_wlu = dist_to_wlu
         self.dist_to_wloo = dist_to_wloo
-        self.is_coed = is_coed
+        self.coed = coed
         self.price = price
+        self.num_rooms_total = num_rooms_total
   
 # Listing Schema - for marshmallow
 class ListingSchema(ma.Schema):
     class Meta: #all the variables you want to see
         strict = True
-        fields = ('listing_id','street','city','postal_code','listing_type','lessor_id','num_rooms','ensuite','dist_to_wlu','dist_to_wloo','is_coed','price')
+        fields = ('listing_id','street','city','postal_code','listing_type','lessor_id','num_rooms_available','ensuite','dist_to_wlu','dist_to_wloo','coed','price', 'num_rooms_total')
 
 # Initiate Listing Schema
 listing_schema = ListingSchema()
@@ -173,17 +175,19 @@ class Subletter(db.Model):
     last_name = db.Column(db.String(100))
     password = db.Column(db.String(100))
     last_login = db.Column(db.DateTime)
-    num_rooms = db.Column(db.Integer)
+    num_rooms_available = db.Column(db.Integer)
+    num_rooms_total = db.Column(db.Integer)
     ensuite = db.Column(db.Boolean)
     dist_to_wlu = db.Column(db.Integer)
     dist_to_wloo = db.Column(db.Integer)
     is_female = db.Column(db.Boolean)
+    coed = db.Column(db.String(100))
     min_price = db.Column(db.Integer)
     max_price = db.Column(db.Integer)
     favourite_listings = db.relationship('Favourite_listing', backref='subletter',lazy=True)
     messages = db.relationship('Message', backref='subletter',lazy=True)
 
-    def __init__(self,dob,phone_num,email,first_name,last_name,password,last_login,num_rooms,ensuite,dist_to_wlu,dist_to_wloo,is_female,min_price,max_price):
+    def __init__(self,dob,phone_num,email,first_name,last_name,password,last_login,num_rooms_available,ensuite,dist_to_wlu,dist_to_wloo,is_female,coed,min_price,max_price,num_rooms_total):
         self.dob = dob
         self.phone_num = phone_num
         self.email = email
@@ -191,11 +195,13 @@ class Subletter(db.Model):
         self.last_name = last_name
         self.password = password
         self.last_login = last_login
-        self.num_rooms = num_rooms
+        self.num_rooms_available = num_rooms_available
         self.ensuite = ensuite
         self.dist_to_wlu = dist_to_wlu
         self.dist_to_wloo = dist_to_wloo
         self.is_female = is_female
+        self.coed = coed
+        self.num_rooms_total = num_rooms_total
         self.min_price = min_price
         self.max_price = max_price
   
@@ -203,7 +209,7 @@ class Subletter(db.Model):
 class SubletterSchema(ma.Schema):
     class Meta: #all the variables you want to see
         strict = True
-        fields = ('subletter_id','dob','phone_num','email','first_name','last_name','password','last_login','num_rooms','ensuite','dist_to_wlu','dist_to_wloo','is_female','min_price','max_price')
+        fields = ('subletter_id','dob','phone_num','email','first_name','last_name','password','last_login','num_rooms_available','ensuite','dist_to_wlu','dist_to_wloo','is_female','coed','min_price','max_price','num_rooms_total')
 
 # Initiate Subletter Schema
 subletter_schema = SubletterSchema()
