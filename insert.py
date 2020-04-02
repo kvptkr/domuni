@@ -5,28 +5,15 @@ mydb = mysql.connector.connect(
   port=3306,
   user="admin",
   passwd="password",
-  dbname="domuni_db"
+  database="domuni_db"
 )
 
 mycursor = mydb.cursor()
 
-# sql = "DROP TABLE student;"
-
-sql = "DROP TABLE student;"
-
-# Read more: https://javarevisited.blogspot.com/2012/10/sql-query-to-find-all-table-on-database-mysql-sqlserver.html#ixzz6IOV0DuyR"
+# sql = "DROP TABLE listing;"
+# sql = "DELETE FROM lessor WHERE lessor_id = 2;"
+sql = "INSERT INTO listing (street,city,postal_code,listing_type,lessor_id,num_rooms,ensuite,dist_to_wlu,dist_to_wloo,is_coed,price) VALUES ('181 Lester Street','Waterloo','N2L 0C2','Apartment',1,5,TRUE,7,7,TRUE,750);"
 
 mycursor.execute(sql)
 
 mydb.commit()
-# import sqlalchemy
-
-# url = 'mysql://%s:%s@%s' % ('admin', 'password', 'domuni-db.c05r3wxvg4zn.us-east-1.rds.amazonaws.com:3306')
-# engine = sqlalchemy.create_engine(url)  # connect to server
-
-# create_str = "CREATE DATABASE IF NOT EXISTS %s ;" % ('domuni')
-# engine.execute(create_str)
-# engine.execute("USE location;")
-
-# # db.create_all()
-# # db.session.commit()
