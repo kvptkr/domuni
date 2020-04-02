@@ -11,7 +11,7 @@ conn = pymysql.connect(host, user = user, port = port, passwd = password, db=dbn
 
 # response = pd.read_sql("",con=conn)
 
-sql = "SELECT * from listing"
+sql = "SELECT * from subletter"
 
 response = pd.read_sql(sql,con=conn)
 
