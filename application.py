@@ -1,6 +1,8 @@
 from flask import Flask, request, jsonify
 from flask_sqlalchemy import SQLAlchemy
 from flask_marshmallow import Marshmallow
+import numpy as np
+import json
 from datetime import datetime
 
 # Initiate application
@@ -280,6 +282,79 @@ def get_listings():
     all_listings = Listing.query.all()
     result = listings_schema.dump(all_listings)
     return jsonify(result)
+
+# ENDPOINT - LoginSubletter
+@application.route('/loginSubletter', methods=['POST'])
+def check_sub_login_creds():
+    email = request.json['email']
+    password = request.json['password']
+
+    subletter = Subletter.query.filter_by(email=email, password=password).first()
+    response = {"response":""}
+
+    if bool(subletter) == True:
+        response["response"] = str(subletter.subletter_id)
+    else:
+        response["response"] = "Invalid credentials."
+
+    return jsonify(response)
+
+# ENDPOINT - LoginLessor
+@application.route('/loginLessor', methods=['POST'])
+def check_les_login_creds():
+    email = request.json['email']
+    password = request.json['password']
+
+    lessor = Lessor.query.filter_by(email=email, password=password).first()
+    response = {"response":""}
+
+    if bool(lessor) == True:
+        response["response"] = str(lessor.subletter_id)
+    else:
+        response["response"] = "Invalid credentials."
+
+    return jsonify(response)
+
+#ENDPOINT - filter listings based on lessor's requirements
+@application.route('/filter-listings', methods = ['GET'])
+def filter_listing():
+    listarray = np.array([])
+
+    subletter = Subletter.query.get(1)
+    listing = Listing.query.filter_by(ensuite=subletter.ensuite).all()
+    for l in listing:
+        if l.num_rooms_available >= subletter.num_rooms_available:
+            if l.num_rooms_total == subletter.num_rooms_total:
+                if l.dist_to_wloo <= subletter.dist_to_wloo:
+                    if l.dist_to_wlu <= subletter.dist_to_wlu:
+                        if l.price <= subletter.max_price:
+                            if l.price >= subletter.min_price:
+                                if subletter.coed == "either":
+                                    if subletter.is_female == True:
+                                        if l.coed != "men":
+                                            listarray = np.append(listarray,[l.listing_id],axis=0)
+                                            #listarray = np.append(listarray,[[l.street,l.city,l.postal_code,l.listing_type,l.num_rooms_available,l.num_rooms_total,l.ensuite,l.dist_to_wlu,l.dist_to_wloo,l.coed,l.price]], axis=0)
+                                    else:
+                                        if l.coed != "female":
+                                            listarray = np.append(listarray,[l.listing_id],axis=0)
+                                            #listarray = np.append(listarray,[[l.street,l.city,l.postal_code,l.listing_type,l.num_rooms_available,l.num_rooms_total,l.ensuite,l.dist_to_wlu,l.dist_to_wloo,l.coed,l.price]], axis=0)
+                                if subletter.coed == "male":
+                                    if l.coed == subletter.coed:
+                                        listarray = np.append(listarray,[l.listing_id],axis=0)
+                                        #listarray = np.append(listarray,[[l.street,l.city,l.postal_code,l.listing_type,l.num_rooms_available,l.num_rooms_total,l.ensuite,l.dist_to_wlu,l.dist_to_wloo,l.coed,l.price]], axis=0)
+                                if subletter.coed == "female":
+                                    if l.coed == subletter.coed:
+                                        listarray = np.append(listarray,[l.listing_id],axis=0)
+                                        #listarray = np.append(listarray,[[l.street,l.city,l.postal_code,l.listing_type,l.num_rooms_available,l.num_rooms_total,l.ensuite,l.dist_to_wlu,l.dist_to_wloo,l.coed,l.price]], axis=0)                
+    #print(listarray)
+    outlist = [[[[[[[[[[[]]]]]]]]]]]
+    for i in range(len(listarray)):
+        Final_listing = Listing.query.get(listarray[i-1])
+        outlist.append([Final_listing.street,Final_listing.city,Final_listing.postal_code,Final_listing.listing_type,Final_listing.num_rooms_available,Final_listing.num_rooms_total,Final_listing.ensuite,Final_listing.dist_to_wlu,Final_listing.dist_to_wloo,Final_listing.coed,Final_listing.price])
+    #lists = listarray.tolist()
+    #json_str = json.dumps(lists)
+    return jsonify(outlist)
+
 
 #ENDPOINT - Create a listing
 @application.route('/listing-create/<lessor_id>', methods=['POST'])
