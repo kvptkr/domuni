@@ -10,16 +10,10 @@ mydb = mysql.connector.connect(
 
 mycursor = mydb.cursor()
 
-<<<<<<< HEAD
-# sql = "DROP TABLE student;"
-
-sql = "INSERT INTO lessor (dob,phone_num,email,first_name,last_name,password,last_login,num_rooms_available,num_rooms_total,ensuite,dist_to_wlu,dist_to_wloo,is_female,coed,min_price,max_price) VALUES ('19990718 12:00:00 AM','0192854578','test2@gmail.com','John','Smith','password','20200402 12:00:00 AM',1,5,TRUE,15,15,FALSE,'either',400,1000);"
-# Read more: https://javarevisited.blogspot.com/2012/10/sql-query-to-find-all-table-on-database-mysql-sqlserver.html#ixzz6IOV0DuyR"
-=======
-# sql = "DROP TABLE subletter;"
+# sql = "DROP TABLE lessor;"
 # sql = "DELETE FROM lessor WHERE lessor_id = 2;"
-sql = "INSERT INTO subletter (dob,phone_num,email,first_name,last_name,password,last_login,num_rooms_available,num_rooms_total,ensuite,dist_to_wlu,dist_to_wloo,is_female,coed,min_price,max_price) VALUES ('19990618 12:00:00 AM','5192854578','jishaanminsariya@gmail.com','Jishaan','Minsariya','password','20200402 12:00:00 AM',1,5,TRUE,15,15,FALSE,'either',400,1000);"
->>>>>>> 9642b0f5d0fabaf8c74ce633cb31613526cf79c1
+
+sql = "INSERT INTO listing (street,city,postal_code,listing_type,lessor_id,num_rooms_available,ensuite,dist_to_wlu,dist_to_wloo,coed,price,num_rooms_total) VALUES ('181 Lester Street', 'Waterloo','N2L 0C2','Sublet',1, 2,TRUE,7,7,'either',700,5);"
 
 mycursor.execute(sql)
 
