@@ -12,8 +12,7 @@ mycursor = mydb.cursor()
 
 # sql = "DROP TABLE student;"
 
-sql = "DROP TABLE student;"
-
+sql = "INSERT INTO lessor (dob,phone_num,email,first_name,last_name,password,last_login,num_rooms_available,num_rooms_total,ensuite,dist_to_wlu,dist_to_wloo,is_female,coed,min_price,max_price) VALUES ('19990718 12:00:00 AM','0192854578','test2@gmail.com','John','Smith','password','20200402 12:00:00 AM',1,5,TRUE,15,15,FALSE,'either',400,1000);"
 # Read more: https://javarevisited.blogspot.com/2012/10/sql-query-to-find-all-table-on-database-mysql-sqlserver.html#ixzz6IOV0DuyR"
 
 mycursor.execute(sql)

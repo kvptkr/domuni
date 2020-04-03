@@ -210,11 +210,53 @@ users_schema = UserSchema(many=True)
 ################################################################################################
 
 # ENDPOINT - Get all students
-@application.route('/students-all',methods=['GET'])
+@application.route('/lessors-all',methods=['GET'])
 def get_students():
-    all_students = Student.query.all()
-    result = students_schema.dump(all_students)
+    all_lessors = Lessor.query.all()
+    result = lessors_schema.dump(all_lessors)
     return jsonify(result)
+
+@application.route('/listings-all',methods=['GET'])
+def get_listings():
+    all_listings = Listing.query.all()
+    result = listings_schema.dump(all_listings)
+    return jsonify(result)
+
+#ENDPOINT - Create a listing
+@application.route('/listing-create/<lessor_id>', methods=['POST'])
+def add_listing(lessor_id):
+    #create the listing with all the info that the lessor puts in
+    #listing_id = request.json['listing_id'] #not included bc primary key
+    street = request.json['street']
+    city = request.json['city']
+    postal_code = request.json['postal_code']
+    listing_type = request.json['listing_type']
+    lessor_id = lessor_id #request.json['lessor_id']
+    #favourite_listings = request.json['favourite_listings']
+    #photos = request.json['photo'] ### I think we should create a separate method that will take in photos at a later time/as a separate operation
+    
+    new_listing = Listing(street, city, postal_code, listing_type, lessor_id)
+
+    db.session.add(new_listing)
+    db.session.commit()
+
+    return listing_schema.jsonify(new_listing)
+
+#ENDPOINT - View Lessor's listings
+@application.route('/<lessor_id>/listings', methods=['GET']) #this seems to work right now but need more data to test
+def my_listing(lessor_id):
+    #returns all the listings that belong to 1 lessor
+    all_my_listings = Listing.query.filter_by(lessor_id = lessor_id)
+    
+    result = listings_schema.dump(all_my_listings)
+    return jsonify(result)
+
+#ENDPOINT - Display individual listing info
+@application.route('/listings/<listing_id>', methods=['GET']) #this seems to work right now too but more data would help test this
+def view_ind_listing(listing_id):
+    listing = Listing.query.get(listing_id)
+    #returns all the attributes of the selected listing id 
+    return listing_schema.jsonify(listing)
 
 
 # Run server
