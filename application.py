@@ -1,6 +1,7 @@
 from flask import Flask, request, jsonify
 from flask_sqlalchemy import SQLAlchemy
 from flask_marshmallow import Marshmallow
+from datetime import datetime
 
 # Initiate application
 application = Flask(__name__)
@@ -108,7 +109,7 @@ class Lessor(db.Model):
     lessor_id = db.Column(db.Integer, primary_key=True)
     dob = db.Column(db.DateTime)
     phone_num = db.Column(db.String(20))
-    email = db.Column(db.String(100))
+    email = db.Column(db.String(100),unique=True)
     first_name = db.Column(db.String(100))
     last_name = db.Column(db.String(100))
     password = db.Column(db.String(100))
@@ -170,7 +171,7 @@ class Subletter(db.Model):
     subletter_id = db.Column(db.Integer, primary_key=True)
     dob = db.Column(db.DateTime)
     phone_num = db.Column(db.String(20))
-    email = db.Column(db.String(100))
+    email = db.Column(db.String(100),unique=True)
     first_name = db.Column(db.String(100))
     last_name = db.Column(db.String(100))
     password = db.Column(db.String(100))
@@ -217,6 +218,56 @@ subletters_schema = SubletterSchema(many=True)
 
 ################################################################################################
 
+# ENDPOINT - Create lessor account
+@application.route('/create-lessor',methods=['PUT'])
+def create_lessor():
+    dob = request.json['dob']
+    phone_num = request.json['phone_num']
+    email = request.json['email']
+    first_name = request.json['first_name']
+    last_name = request.json['last_name']
+    password = request.json['password']
+    
+    new_lessor = Lessor(dob,phone_num,email,first_name,last_name,password,datetime.now())
+
+    db.session.add(new_lessor)
+    db.session.commit()
+
+    lessor_id = Lessor.query.filter_by(email = email).first().lessor_id
+    response = {'response':lessor_id}
+
+    return jsonify(response)
+    
+# ENDPOINT - Create subletter account
+@application.route('/create-subletter',methods=['PUT'])
+def create_subletter():
+    dob = request.json['dob']
+    phone_num = request.json['phone_num']
+    email = request.json['email']
+    first_name = request.json['first_name']
+    last_name = request.json['last_name']
+    password = request.json['password']
+    last_login = request.json['last_login']
+    num_rooms_available = request.json['num_rooms_available']
+    ensuite = request.json['ensuite']
+    dist_to_wlu = request.json['dist_to_wlu']
+    dist_to_wloo = request.json['dist_to_wloo']
+    is_female = request.json['is_female']
+    coed = request.json['coed']
+    num_rooms_total = request.json['num_rooms_total']
+    min_price = request.json['min_price']
+    max_price = request.json['max_price']
+    
+    new_subletter = Subletter(dob,phone_num,email,first_name,last_name,password,datetime.now(),num_rooms_available,ensuite,dist_to_wlu,dist_to_wloo,is_female,coed,min_price,max_price,num_rooms_total)
+
+    db.session.add(new_subletter)
+    db.session.commit()
+
+    subletter_id = Subletter.query.filter_by(email = email).first().subletter_id
+    response = {'response':subletter_id}
+
+    return jsonify(response)
+   
 # ENDPOINT - Get all students
 @application.route('/lessors-all',methods=['GET'])
 def get_students():
@@ -265,7 +316,6 @@ def view_ind_listing(listing_id):
     listing = Listing.query.get(listing_id)
     #returns all the attributes of the selected listing id 
     return listing_schema.jsonify(listing)
-
 
 # Run server
 if __name__ == '__main__':
