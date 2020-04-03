@@ -1,6 +1,9 @@
 from flask import Flask, request, jsonify
 from flask_sqlalchemy import SQLAlchemy
 from flask_marshmallow import Marshmallow
+from datetime import datetime
+from sqlalchemy import Boolean
+import json
 
 # Initiate application
 application = Flask(__name__)
@@ -218,12 +221,33 @@ subletters_schema = SubletterSchema(many=True)
 ################################################################################################
 
 # ENDPOINT - Get all students
-@application.route('/students-all',methods=['GET'])
-def get_students():
-    all_students = Student.query.all()
-    result = students_schema.dump(all_students)
-    return jsonify(result)
+@application.route('/get-messages',methods=['POST'])
+def get_messages():
 
+    subletter_id = request.json['subletter_id']
+    lessor_id = request.json['lessor_id']
+    all_messages = Message.query.filter_by(subletter_id=subletter_id, lessor_id=lessor_id).all()
+    msgs = messages_schema.dump(all_messages)
+
+   
+    
+    return jsonify(msgs)
+
+@application.route('/message-create', methods=['PUT'])
+def add_message():
+    subletter_id = request.json['subletter_id']
+    lessor_id = request.json['lessor_id']
+    text = request.json['text']
+    lessor_sent = request.json['lessor_sent']
+    now = datetime.utcnow()
+    
+ 
+    new_message = Message(lessor_id, subletter_id, text, str(now), lessor_sent)
+
+    db.session.add(new_message)
+    db.session.commit()
+
+    return "your message was successfully sent"
 
 # Run server
 if __name__ == '__main__':
