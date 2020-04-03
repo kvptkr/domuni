@@ -392,6 +392,34 @@ def view_ind_listing(listing_id):
     #returns all the attributes of the selected listing id 
     return listing_schema.jsonify(listing)
 
+# ENDPOINT - Get all messages between two users
+@application.route('/get-messages',methods=['POST'])
+def get_messages():
+    subletter_id = request.json['subletter_id']
+    lessor_id = request.json['lessor_id']
+    all_messages = Message.query.filter_by(subletter_id=subletter_id, lessor_id=lessor_id).all()
+    msgs = messages_schema.dump(all_messages)
+    
+    return jsonify(msgs)
+
+# ENDPOINT- create and send a message
+@application.route('/message-create', methods=['PUT'])
+def add_message():
+    subletter_id = request.json['subletter_id']
+    lessor_id = request.json['lessor_id']
+    text = request.json['text']
+    lessor_sent = request.json['lessor_sent']
+    now = datetime.utcnow()
+    
+ 
+    new_message = Message(lessor_id, subletter_id, text, str(now), lessor_sent)
+
+    db.session.add(new_message)
+    db.session.commit()
+
+    return "your message was successfully sent"
+
+
 # Run server
 if __name__ == '__main__':
     # application.run(host='0.0.0.0')
