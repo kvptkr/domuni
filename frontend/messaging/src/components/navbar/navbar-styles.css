@@ -1,0 +1,10 @@
+.navbar{
+    width:60vw;
+    margin:auto;
+    padding-top:5px
+}
+.navbar-item{
+    font-size:30px;
+    color:hsl(204, 86%, 53%); 
+    font-weight: bold;
+}

@@ -8,10 +8,6 @@ export const SendMessageBox = ({ placeholder , handleChange}) => (
         <label for="exampleFormControlTextarea1">Please enter your message below</label>
     <   textarea class="form-control" name="sendMessageBox"id="exampleFormControlTextarea1" rows="3"></textarea>
     </div>
-    
-    
-    
-
     </div>
     
 )

@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
 import { CardList } from "./components/card-list.component";
 import { SearchBox } from "./components/search-box.component";
+import { Navbar } from "./components/navbar/navbar.component";
 import { MessageContainer } from "./components/message-container/message-container.component";
-import 'bootstrap/dist/css/bootstrap.css';
+import "bootstrap/dist/css/bootstrap.css";
 import './App.css';
 import { SendMessageBox } from './components/send-message-box/send-message-box.component';
 
@@ -74,6 +75,8 @@ class App extends Component {
       )
     return (
       <div className="App">
+      <Navbar />
+      <div>
         <center>
         < SearchBox placeholder='search users' handleChange= {e => this.setState({searchField: e.target.value})}/>
         </center>
@@ -84,15 +87,12 @@ class App extends Component {
             </div>
             <div class="col-sm-9">
               < MessageContainer messages= {messages}/>
-              <SendMessageBox onClick={ this.sendMsg} />
+              < SendMessageBox onClick={ this.sendMsg} />
               <button type="button" class="btn btn-outline-secondary" onClick={this.sendMsg}>Send Message</button>
             </div>
           </div>
-        
-
         </div>
-        
-        
+        </div>
       </div>
     );
   }

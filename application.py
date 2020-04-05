@@ -402,6 +402,14 @@ def get_messages():
     
     return jsonify(msgs)
 
+@application.route('/get-user-messages',methods=['POST'])
+def get_user_messages():
+    lessor_id = request.json['lessor_id']
+    all_messages = Message.query.filter_by(lessor_id=lessor_id).all()
+    msgs = messages_schema.dump(all_messages)
+    
+    return jsonify(msgs)
+
 # ENDPOINT- create and send a message
 @application.route('/message-create', methods=['PUT'])
 def add_message():
